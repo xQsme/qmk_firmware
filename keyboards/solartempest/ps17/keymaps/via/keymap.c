@@ -23,19 +23,6 @@
 #endif
 
 
-// IDLE TIMEOUTS
-#ifdef IDLE_TIMEOUT_ENABLE
-    #define TIMEOUT_THRESHOLD_DEFAULT   5    // default timeout minutes
-    #define TIMEOUT_THRESHOLD_MAX       140  // upper limits (2 hours and 10 minutes -- no rgb indicators above this value)
-
-    //prototype  functions
-    uint16_t get_timeout_threshold(void);
-    void timeout_reset_timer(void);
-    void timeout_update_threshold(bool increase);
-    void timeout_tick_timer(void);
-#endif  //IDLE_TIMEOUT_ENABLE
-
-
 bool is_alt_tab_active = false; // Super Alt Tab Code
 uint16_t alt_tab_timer = 0;
 bool spam_arrow;
@@ -200,49 +187,6 @@ void matrix_init_user(void) { //run when matrix is initiated, before all feature
 };
 
 
-// TIMEOUTS
-#ifdef IDLE_TIMEOUT_ENABLE
-    static uint16_t timeout_timer = 0;
-    static uint16_t timeout_counter = 0;  //in minute intervals
-    static uint16_t timeout_threshold = TIMEOUT_THRESHOLD_DEFAULT;
-
-    uint16_t get_timeout_threshold(void) {
-        return timeout_threshold;
-    }
-
-    void timeout_reset_timer(void) {
-        timeout_timer = timer_read();
-        timeout_counter = 0;
-    };
-
-    void timeout_update_threshold(bool increase) {
-        if (increase && timeout_threshold < TIMEOUT_THRESHOLD_MAX) timeout_threshold++;
-        if (!increase && timeout_threshold > 0) timeout_threshold--;
-    };
-
-    void timeout_tick_timer(void) {
-        if (timeout_threshold > 0) {
-            if (timer_elapsed(timeout_timer) >= 60000) { // 1 minute tick
-                timeout_counter++;
-                timeout_timer = timer_read();
-            }
-            #ifdef RGB_MATRIX_ENABLE
-                if (timeout_threshold > 0 && timeout_counter >= timeout_threshold) {
-                    rgb_matrix_disable_noeeprom();
-                }
-            #endif
-            #ifdef RGBLIGHT_ENABLE
-                if (timeout_threshold > 0 && timeout_counter >= timeout_threshold) {
-                    rgblight_toggle_noeeprom();
-                }
-            #endif
-        } // timeout_threshold = 0 will disable timeout
-    }
-
-    __attribute__((weak)) void matrix_scan_keymap(void) {}
-#endif // IDLE_TIMEOUT_ENABLE
-
-
 void matrix_scan_user(void) { //run whenever user matrix is scanned
   if (is_alt_tab_active) {
     if (timer_elapsed(alt_tab_timer) > 1000) {
@@ -256,11 +200,6 @@ void matrix_scan_user(void) { //run whenever user matrix is scanned
     //tap_code(KC_DOWN);
     tap_code(KC_F24);
   }
-  
-	#ifdef IDLE_TIMEOUT_ENABLE
-        timeout_tick_timer();
-        matrix_scan_keymap();
-	#endif // IDLE_TIMEOUT_ENABLE
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {

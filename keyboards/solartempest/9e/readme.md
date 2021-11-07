@@ -21,6 +21,7 @@ For detailed instructions on using VIA and flashing, please refer to the section
 -   Allows for remapping of per-layer rotary encoder functions in VIA.
 -   Custom macro key in VIA for Super Alt Tab, which is fully compatible with rotary encoders.
 -   Custom macro key in VIA for moving windows to other monitors in Windows, which is fully compatible with rotary encoders.
+-   Stretch timer (reminder to stop sitting) animates LEDS after 30 minute interval. LED indicator is red and timer is toggled.
 
 
 ## Flashing

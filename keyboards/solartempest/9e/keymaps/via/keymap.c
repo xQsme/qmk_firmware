@@ -223,7 +223,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 					is_encoder6_rotate = true;  
 					encoder_timer = timer_read();
 				}
-				else if(index==7){
+				else if(index==6){
 					is_encoder7_rotate = true;  
 					encoder_timer = timer_read();
 				}

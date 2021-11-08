@@ -93,7 +93,7 @@
 		27, 26, 25, 24,    23  )
 #endif
 
-#ifdef RGB_MATRIX_ENABLE // For dynamic RGB Matrix effects
+#ifdef RGB_MATRIX_ENABLE // For dynamic/reactive RGB Matrix effects
 	#define DRIVER_LED_TOTAL 28 // The number of LEDs connected for matrix, 17 key + 11 underglow
 	#define RGB_MATRIX_CENTER { 126, 126 };
 	#define RGB_MATRIX_KEYPRESSES

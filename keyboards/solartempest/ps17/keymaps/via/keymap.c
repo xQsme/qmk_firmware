@@ -17,7 +17,7 @@
  */
 
 #include QMK_KEYBOARD_H
-#include "PS17.h"
+#include "ps17.h"
 #ifdef RGBLIGHT_ENABLE
 	extern rgblight_config_t rgblight_config; // To pull layer status for RGBLIGHT
 #endif
@@ -25,9 +25,11 @@
 
 bool is_alt_tab_active = false; // Super Alt Tab Code
 uint16_t alt_tab_timer = 0;
+
 bool spam_arrow;
 uint16_t spam_timer = false;
 uint16_t spam_interval = 1000; // (1000ms == 1s)
+
 bool teams_muted;
 #ifdef VIA_ENABLE
 	enum custom_keycodes { //Use USER 00 instead of SAFE_RANGE for Via. VIA json must include the custom keycode.
@@ -183,10 +185,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 
-void matrix_init_user(void) { //run when matrix is initiated, before all features init
-};
-
-
 void matrix_scan_user(void) { //run whenever user matrix is scanned
   if (is_alt_tab_active) {
     if (timer_elapsed(alt_tab_timer) > 1000) {
@@ -196,8 +194,6 @@ void matrix_scan_user(void) { //run whenever user matrix is scanned
   }
   if (spam_arrow && timer_elapsed(spam_timer) >= spam_interval) {
     spam_timer = timer_read();
-    //tap_code(KC_UP);
-    //tap_code(KC_DOWN);
     tap_code(KC_F24);
   }
 };
@@ -295,32 +291,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 
-// RGB Layer Light Settings - Note that this will fix the key switch LED colour and brightness
-const rgblight_segment_t PROGMEM my_layer0_layer[] = RGBLIGHT_LAYER_SEGMENTS({0, 0, 95,255,90}); //Spring green		(Code is extra for static key lighting of layers)
-const rgblight_segment_t PROGMEM my_layer1_layer[] = RGBLIGHT_LAYER_SEGMENTS({0, 0, 5,255,120}); //Yellow-orange	(Code is extra for static key lighting of layers)
-const rgblight_segment_t PROGMEM my_layer2_layer[] = RGBLIGHT_LAYER_SEGMENTS({0, 0, 128,255,100}); //Cyan			(Code is extra for static key lighting of layers)
-const rgblight_segment_t PROGMEM my_layer3_layer[] = RGBLIGHT_LAYER_SEGMENTS({0, 0, 215,255,120}); //Magenta		(Code is extra for static key lighting of layers)
-const rgblight_segment_t PROGMEM my_layer4_layer[] = RGBLIGHT_LAYER_SEGMENTS({0, 0, 15,255,120}); //Orange-red		(Code is extra for static key lighting of layers)
-const rgblight_segment_t *const PROGMEM my_rgb_layers[] = RGBLIGHT_LAYERS_LIST( //Lighting layers
-    my_layer0_layer,
-    my_layer1_layer,
-    my_layer2_layer,
-    my_layer3_layer,
-    my_layer4_layer
-);
-
 
 void keyboard_post_init_user(void) {	//run as last task in keyboard init
   #ifdef RGB_MATRIX_ENABLE
     //NOTE 1: Layer lighting doesn't work in RGB matrix mode
-	//NOTE 2: VIA lighting tab doesn't work and will crash in RGB matrix mode
+	//NOTE 2: VIA lighting tab doesn't work and might crash in RGB matrix mode
 	//NOTE 3: VIA layers doesn't seem to work properly in RGB matrix mode
 	//rgb_matrix_enable_noeeprom(); //turn on RGB matrix based on previous state
 	rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_REACTIVE_MULTIWIDE); //set initial RGB matrix mode	
 	rgb_matrix_sethsv_noeeprom(50, 255, 100); //sets LED to green-yellow
   #endif
   #ifdef RGBLIGHT_ENABLE
-    rgblight_layers = my_rgb_layers;// Enable the LED layers
+    //rgblight_layers = my_rgb_layers;// Enable the LED layers
 	rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_GRADIENT+8); //Set to static gradient 9
 	layer_move(0); //start on layer 0 to get the lighting activated
   #endif
@@ -335,21 +317,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     rgblight_set_layer_state(3, layer_state_cmp(state, 3));
     rgblight_set_layer_state(4, layer_state_cmp(state, 4));
 	
-	/*static uint16_t underglow_brightness = 140; //This code can be used to have edge and underglow LEDs selectively brighter
-	static uint16_t perkey_brightness = 80;
-	static uint16_t lastrow_brightness = 50; //for less shine-through at case edges (brighter is okay for FR4 plate)
-	static uint16_t current_hue = 0; //hue calculated to be used
-	static uint16_t layer0_huestart = 56; //hue gradient starting colour - green/blue
-	static uint16_t layer0_hueincrement = 2; //hue gradient colour increment
-	static uint16_t layer1_huestart = 15; //hue gradient starting colour - orange/green
-	static uint16_t layer1_hueincrement = 2; //hue gradient colour increment
-	static uint16_t layer2_huestart = 220; //hue gradient starting colour - magenta/orange (this layer is for photoshop)
-	static uint16_t layer2_hueincrement = 2; //hue gradient colour increment
-	static uint16_t layer3_huestart = 135; //hue gradient starting colour - blue/purple
-	static uint16_t layer3_hueincrement = 2; //hue gradient colour increment
-	static uint16_t layer4_huestart = 30; //hue gradient starting colour - orange/red
-	static uint16_t layer4_hueincrement = 1; //hue gradient colour increment
-	*/
 	// This is what the LED layout is.
 	// 1,                 0, 
 	// 3,                 2, 
@@ -362,83 +329,18 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 	switch(biton32(state)){ // Change all other LEDs based on layer state as well
 		case 0:
 			rgblight_sethsv_noeeprom(50,255,100);
-			/*for (uint8_t i = 0; i < RGBLED_NUM; i++){ //This code can be used to have edge and underglow LEDs selectively brighter
-				current_hue=i*layer0_hueincrement+layer0_huestart; //Determine the calculated hue
-				if(current_hue>255){current_hue=current_hue-255;}; //Roll over max hue of 256
-				if (i == 1 || i == 3 || i == 9 || i == 18 || i == 25 || i == 27) {	  
-				  rgblight_sethsv_at(current_hue,255,underglow_brightness,i);
-				} else if (i == 0 || i == 2 || i == 4 || i == 14 || i == 23) { //make right side of the numpad underglow darker
-				  rgblight_sethsv_at(current_hue,255,lastrow_brightness,i);
-				} else if (i == 26 || i == 24 || i == 19 || i ==10) { //make per key end LEDs lighter to reduce glare
-				  rgblight_sethsv_at(current_hue,255,lastrow_brightness,i);
-				} else {
-				  rgblight_sethsv_at(current_hue,255,perkey_brightness,i);
-				};
-			};*/
+			//You can selectively decrease certain LEDs if you are have a clear acrylic case and the shine-through bothers you. Rgblight_sethsv_at() can be used here for those LEDs (0, 2, 4, 14, and 23). Otherwise some black tape on the acrylic plate or foam underneath the FR4 will do the trick.
 			break;
 		case 1:
 			rgblight_sethsv_noeeprom(5,255,100);
-			/*for (uint8_t i = 0; i < RGBLED_NUM; i++){ //This code can be used to have edge and underglow LEDs selectively brighter
-				current_hue=i*layer1_hueincrement+layer1_huestart; //Determine the calculated hue
-				if(current_hue>255){current_hue=current_hue-255;}; //Roll over max hue of 256
-				if (i == 1 || i == 3 || i == 9 || i == 18 || i == 25 || i == 27) {	  
-				  rgblight_sethsv_at(current_hue,255,underglow_brightness,i);
-				} else if (i == 0 || i == 2 || i == 4 || i == 14 || i == 23) { //make right side of the numpad underglow darker
-				  rgblight_sethsv_at(current_hue,255,lastrow_brightness,i);
-				} else if (i == 26 || i == 24 || i == 19 || i ==10) { //make per key end LEDs lighter to reduce glare
-				  rgblight_sethsv_at(current_hue,255,lastrow_brightness,i);
-				} else {
-				  rgblight_sethsv_at(current_hue,255,perkey_brightness,i);
-				};
-			};*/
-			break;
 		case 2:
 			rgblight_sethsv_noeeprom(128,255,100);
-			/*for (uint8_t i = 0; i < RGBLED_NUM; i++){ //This code can be used to have edge and underglow LEDs selectively brighter
-				current_hue=i*layer2_hueincrement+layer2_huestart; //Determine the calculated hue
-				if(current_hue>255){current_hue=current_hue-255;}; //Roll over max hue of 256
-				if (i == 1 || i == 3 || i == 9 || i == 18 || i == 25 || i == 27) {	  
-				  rgblight_sethsv_at(current_hue,255,underglow_brightness,i);
-				} else if (i == 0 || i == 2 || i == 4 || i == 14 || i == 23) { //make right side of the numpad underglow darker
-				  rgblight_sethsv_at(current_hue,255,lastrow_brightness,i);
-				} else if (i == 26 || i == 24 || i == 19 || i ==10) { //make per key end LEDs lighter to reduce glare
-				  rgblight_sethsv_at(current_hue,255,lastrow_brightness,i);
-				} else {
-				  rgblight_sethsv_at(current_hue,255,perkey_brightness,i);
-				};
-			};*/
 			break;
 		case 3:
 			rgblight_sethsv_noeeprom(215,255,100);
-			/*for (uint8_t i = 0; i < RGBLED_NUM; i++){ //This code can be used to have edge and underglow LEDs selectively brighter
-				current_hue=i*layer3_hueincrement+layer3_huestart; //Determine the calculated hue
-				if(current_hue>255){current_hue=current_hue-255;}; //Roll over max hue of 256
-				if (i == 1 || i == 3 || i == 9 || i == 18 || i == 25 || i == 27) {	  
-				  rgblight_sethsv_at(current_hue,255,underglow_brightness,i);
-				} else if (i == 0 || i == 2 || i == 4 || i == 14 || i == 23) { //make right side of the numpad underglow darker
-				  rgblight_sethsv_at(current_hue,255,lastrow_brightness,i);
-				} else if (i == 26 || i == 24 || i == 19 || i ==10) { //make per key end LEDs lighter to reduce glare
-				  rgblight_sethsv_at(current_hue,255,lastrow_brightness,i);
-				} else {
-				  rgblight_sethsv_at(current_hue,255,perkey_brightness,i);
-				};
-			};*/
 			break;
 		case 4:
 			rgblight_sethsv_noeeprom(15,255,100);
-			/*for (uint8_t i = 0; i < RGBLED_NUM; i++){ //This code can be used to have edge and underglow LEDs selectively brighter
-				current_hue=i*layer4_hueincrement+layer4_huestart; //Determine the calculated hue
-				if(current_hue>255){current_hue=current_hue-255;}; //Roll over max hue of 256
-				if (i == 1 || i == 3 || i == 9 || i == 18 || i == 25 || i == 27) {	  
-				  rgblight_sethsv_at(current_hue,255,underglow_brightness,i);
-				} else if (i == 0 || i == 2 || i == 4 || i == 14 || i == 23) { //make right side of the numpad underglow darker
-				  rgblight_sethsv_at(current_hue,255,lastrow_brightness,i);
-				} else if (i == 26 || i == 24 || i == 19 || i ==10) { //make per key end LEDs lighter to reduce glare
-				  rgblight_sethsv_at(current_hue,255,lastrow_brightness,i);
-				} else {
-				  rgblight_sethsv_at(current_hue,255,perkey_brightness,i);
-				};
-			};*/
 			break;
 	  }
     return state;

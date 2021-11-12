@@ -29,7 +29,7 @@
 
 // Set which side is master
 //#define EE_HANDS //Use this instead for EEPROM setting
-#define MASTER_LEFT
+#define MASTER_RIGHT
 
 // Key matrix size
 // Rows are doubled-up. Added extra column for rotary encoder VIA mapping.

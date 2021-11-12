@@ -91,7 +91,7 @@
 	#define PIMORONI_TRACKBALL_INVERT_Y
 	#define PIMORONI_TRACKBALL_INTERVAL_MS 6 //Default is 8ms
 	//#define PIMORONI_TRACKBALL_INVERT_X
-	//#define PIMORONI_TRACKBALL_CLICK //Not compatible with having mouse keys on keymap
+	//#define PIMORONI_TRACKBALL_CLICK //Not compatible with having mouse keys in keymap. Use trackball_register_button() and trackball_click() in keymap.c instead.
 #endif               
 
 

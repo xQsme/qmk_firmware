@@ -122,6 +122,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {  //Can skip these
 			trackball_set_rgbw(RGB_GOLDENROD, 0x00);
 		}
 	}
+	
+	bool pointing_device_task_user(pimoroni_data* trackball_data) { //Code from Dasky (Thanks!). This corrects the rotate/inversion scrolling issue currently in QMK Master.
+		if (trackball_is_scrolling()) {
+			pimoroni_data temp = *trackball_data;
+			trackball_data->up = temp.down;
+			trackball_data->down = temp.up;
+		}
+		return true;
+	}
 
 	#if !defined(MOUSEKEY_ENABLE)	//Allows for button clicks on keymap even though mousekeys is not defined.
 		static bool mouse_button_one, trackball_button_one;
@@ -137,13 +146,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {  //Can skip these
 		pointing_device_set_report(currentReport);
 	}
 	
-	bool pointing_device_task_user(pimoroni_data* trackball_data) { //Code from Dasky (Thanks!). This corrects the rotate/inversion scrolling issue currently in QMK Master.
-		if (trackball_is_scrolling()) {
-			pimoroni_data temp = *trackball_data;
-			trackball_data->up = temp.down;
-			trackball_data->down = temp.up;
+	void trackball_click(bool pressed, report_mouse_t* mouse) { //Use for single mouse button and key presses. Click and drag is done with keys elsewhere.
+		if (pressed) { //trackball pressed
+			//tap_code_delay(KC_A,300); //Use delay as simple debounce for key strokes
+			mouse->buttons |= MOUSE_BTN1;
+		} else {  //released
+			mouse->buttons &= ~MOUSE_BTN1;
 		}
-		return true;
 	}
 #endif
 

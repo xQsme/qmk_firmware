@@ -45,7 +45,7 @@
 	bool showedJump = true;
 	bool isBarking = false;
 	
-	#ifdef OLED_LOGO
+	#if defined(OLED_LOGO) && !defined(OLED_NO_SLAVE)
 		static void render_logo(int LUNA_X, int LUNA_Y) {
 			static const char PROGMEM luna_logo[] = {
 				0x00, 0x00, 0x04, 0xf6, 0xb8, 0xf8, 0xd8, 0xf0, 0xe0, 0xc0, 0x00, 0x00, 0x00, 0x80, 0xc0, 0xe0, 
@@ -233,16 +233,18 @@
 	}
 	// KEYBOARD PET END
 
-	static void print_logo_narrow(void) {
-		oled_set_cursor(0,4);
-		oled_write("SOLAR", false);
-		oled_set_cursor(0,5);
-		oled_write("TMPST", false);
-	 
-		#ifdef OLED_LOGO
-			render_logo(0,9); //Not defining this in config.h will save 112 bytes.
-		#endif
-	}
+	#ifndef OLED_NO_SLAVE
+		static void print_logo_narrow(void) {
+			oled_set_cursor(0,4);
+			oled_write("SOLAR", false);
+			oled_set_cursor(0,5);
+			oled_write("TMPST", false);
+		 
+			#ifdef OLED_LOGO
+				render_logo(0,9); //Not defining this in config.h will save 112 bytes.
+			#endif
+		}
+	#endif
 	 
 	static void print_status_narrow(void) {
 		/*switch (get_highest_layer(default_layer_state)) { //May be useful if you use multiple non-QWERTY layouts to show which is active.
@@ -311,7 +313,9 @@
 		if (is_keyboard_master()) {
 			print_status_narrow();
 		} else {
-			print_logo_narrow();
+			#ifndef OLED_NO_SLAVE
+				print_logo_narrow();
+			#endif
 		}
 	}
 #endif

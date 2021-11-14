@@ -4,7 +4,7 @@
 
 Sofle is 6×4+5 keys column-staggered split keyboard. Based on Lily58, Corne and Helix keyboards.
 
-For detailed instructions on using VIA and flashing, please refer to the sections further down the page!
+## When flashing, MAKE SURE to load the VIA keymap and layout otherwise your keys won't work! Please refer to the sections further down the page.
 
 For details about the keyboard design, refer to Josef's blog: [Sofle Keyboard - a split keyboard based on Lily58 and Crkbd](https://josef-adamcik.cz/electronics/let-me-introduce-you-sofle-keyboard-split-keyboard-based-on-lily58.html)
 
@@ -17,10 +17,11 @@ Build guide and log is available here: [SofleKeyboard build log/guide](https://j
 # Custom Features:
 ### OLED Features:
 -   Includes Snakey keyboard pet! Slithers according to WPM, bites, and sticks its tongue out at you!
+-   Includes Snakey minimal version, with less animations and WPM-free to allow for more free space.
 -	OLED displays current layer, lock key status, WPM, custom logo, and custom name.
 -	OLED shuts off on idle and when computer is sleeping.
 -	Includes working Luna keyboard pet.
--	Includes working Bongocat (disable RGB for sufficient space).
+-	Includes working Bongocat (disable other features for sufficient space).
 -   Includes stock OLED code as well.
 
 ### Trackball Features:
@@ -43,10 +44,14 @@ Build guide and log is available here: [SofleKeyboard build log/guide](https://j
 -   Custom macro key in VIA for Super Alt Tab, which is fully compatible with rotary encoders.
 -   Custom macro key in VIA for moving windows to other monitors in Windows, which is fully compatible with rotary encoders.
 
+### Haptic Feedback Features:
+-   Supports Pimoroni Haptic Bzzz installed on master side.
+-	Different vibrations when layers are activated.
+-	Provides tactile feedback when trackball is clicked or mouse keys are used.
+
 ### Tap and Other Features:
 -   Push left-shift + backspace to delete whole words. Right-shift + backspace to delete whole words in the opposite direction.
 -   Double tap layers to stay on a layer instead of momentary push.
--   Adds key combo functionality.
 -   Symmetric modifiers (CMD/Super, Alt/Opt, Ctrl, Shift).
 
 ## Using with VIA
@@ -67,7 +72,7 @@ qmk compile -kb solartempest/sofle -km via
 
 ## Flashing
 
-Flash using the correct command below or use QMK Toolbox. Specifying side during compile is unnecessary as Master Left is defined:
+Flash using the correct command below or use QMK Toolbox. Specifying side during compile is unnecessary as Master Left is defined by default:
 
 ```sh
 # for pro micro-based builds

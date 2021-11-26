@@ -1,5 +1,6 @@
 
 /* Copyright 2021 Jonavin Eng @Jonavin
+   Copyright 2021 solartempest
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -96,12 +97,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     }
 
     __attribute__((weak)) void matrix_scan_keymap(void) {}
-
-    void matrix_scan_user(void) {
-        timeout_tick_timer();
-        matrix_scan_keymap();
-    }
 #endif // IDLE_TIMEOUT_ENABLE
+
+void matrix_scan_user(void) {
+	#ifdef IDLE_TIMEOUT_ENABLE
+		timeout_tick_timer();
+		matrix_scan_keymap();
+	#endif
+}
 
 
 #if defined(ENCODER_ENABLE) && defined(ENCODER_DEFAULTACTIONS_ENABLE)       // Encoder Functionality
@@ -130,9 +133,16 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
                 register_code(KC_PGDN);
                 register_mods(MOD_BIT(KC_RSFT));
             } else if (get_mods() & MOD_BIT(KC_LCTL)) {  // if holding Left Ctrl, navigate next word
-                    tap_code16(LCTL(KC_RGHT));
-            } else if (get_mods() & MOD_BIT(KC_LALT)) {  // if holding Left Alt, change media next track
-                tap_code(KC_MEDIA_NEXT_TRACK);
+                tap_code16(LCTL(KC_RGHT));
+            } else if (get_mods() & MOD_BIT(KC_LALT)) {  // if holding Left Alt, move window to right monitor
+                unregister_mods(MOD_BIT(KC_LALT));
+				register_code(KC_LSFT);
+				register_code(KC_LWIN);
+				register_code(KC_RIGHT);
+				unregister_code(KC_RIGHT);
+				unregister_code(KC_LWIN);
+				unregister_code(KC_LSFT);
+                register_mods(MOD_BIT(KC_LALT));
             } else  {
                 switch (selected_layer) {
                 case _FN1:
@@ -157,8 +167,15 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
                 register_mods(MOD_BIT(KC_RSFT));
             } else if (get_mods() & MOD_BIT(KC_LCTL)) {  // if holding Left Ctrl, navigate previous word
                 tap_code16(LCTL(KC_LEFT));
-            } else if (get_mods() & MOD_BIT(KC_LALT)) {  // if holding Left Alt, change media previous track
-                tap_code(KC_MEDIA_PREV_TRACK);
+            } else if (get_mods() & MOD_BIT(KC_LALT)) {  // if holding Left Alt, move window to left monitor
+                unregister_mods(MOD_BIT(KC_LALT));
+				register_code(KC_LSFT);
+				register_code(KC_LWIN);
+				register_code(KC_LEFT);
+				unregister_code(KC_LEFT);
+				unregister_code(KC_LWIN);
+				unregister_code(KC_LSFT);
+                register_mods(MOD_BIT(KC_LALT));
             } else {
                 switch (selected_layer) {
                 case _FN1:
@@ -183,50 +200,72 @@ __attribute__ ((weak))  bool process_record_keymap(uint16_t keycode, keyrecord_t
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (!process_record_keymap(keycode, record)) { return false; }
-     switch (keycode) {
-    case KC_00:
-        if (record->event.pressed) {
-            // when keycode KC_00 is pressed
-            SEND_STRING("00");
-        } else unregister_code16(keycode);
-        break;
-    case KC_WINLCK:
-        if (record->event.pressed) {
-            keymap_config.no_gui = !keymap_config.no_gui; //toggle status
-        } else  unregister_code16(keycode);
-        break;
+    switch (keycode) {
+		case KC_00:
+			if (record->event.pressed) {
+				// when keycode KC_00 is pressed
+				SEND_STRING("00");
+			} else unregister_code16(keycode);
+			break;
+		case KC_WINLCK:
+			if (record->event.pressed) {
+				keymap_config.no_gui = !keymap_config.no_gui; //toggle status
+			} else  unregister_code16(keycode);
+			break;
 
-#ifdef IDLE_TIMEOUT_ENABLE
-    case RGB_TOI:
-        if(record->event.pressed) {
-            timeout_update_threshold(true);
-        } else  unregister_code16(keycode);
-        break;
-    case RGB_TOD:
-        if(record->event.pressed) {
-             timeout_update_threshold(false);  //decrease timeout
-        } else  unregister_code16(keycode);
-        break;
-#endif // IDLE_TIMEOUT_ENABLE
-#ifdef RGB_MATRIX_ENABLE
-    case RGB_NITE:
-        if(record->event.pressed) {
-            rgb_nightmode = !rgb_nightmode;
-        } else  unregister_code16(keycode);
-        break;
-#endif // RGB_MATRIX_ENABLE
-    default:
-        if (record->event.pressed) {
-            #ifdef RGB_MATRIX_ENABLE
-                rgb_matrix_enable_noeeprom();
-            #endif
-            #ifdef IDLE_TIMEOUT_ENABLE
-                timeout_reset_timer();  //reset activity timer
-            #endif
-        }
-        break;
-    }
-    return true;
+		#ifdef IDLE_TIMEOUT_ENABLE
+			case RGB_TOI:
+				if(record->event.pressed) {
+					timeout_update_threshold(true);
+				} else  unregister_code16(keycode);
+				break;
+			case RGB_TOD:
+				if(record->event.pressed) {
+					 timeout_update_threshold(false);  //decrease timeout
+				} else  unregister_code16(keycode);
+				break;
+		#endif // IDLE_TIMEOUT_ENABLE
+		#ifdef RGB_MATRIX_ENABLE
+			case RGB_NITE:
+				if(record->event.pressed) {
+					rgb_nightmode = !rgb_nightmode;
+				} else  unregister_code16(keycode);
+				break;
+		#endif // RGB_MATRIX_ENABLE
+		
+		case NMR:	//Move window to next monitor on right
+		  if (record->event.pressed) {
+			register_code(KC_LSFT);
+			register_code(KC_LWIN);
+			register_code(KC_RIGHT);
+			unregister_code(KC_RIGHT);
+			unregister_code(KC_LWIN);
+			unregister_code(KC_LSFT);
+		  }
+		  return true;
+		case NML:	//Move window to next monitor on left
+		  if (record->event.pressed) {
+			register_code(KC_LSFT);
+			register_code(KC_LWIN);
+			register_code(KC_LEFT);
+			unregister_code(KC_LEFT);
+			unregister_code(KC_LWIN);
+			unregister_code(KC_LSFT);
+		  }
+		  return true;
+		
+		default:
+			if (record->event.pressed) {
+				#ifdef RGB_MATRIX_ENABLE
+					rgb_matrix_enable_noeeprom();
+				#endif
+				#ifdef IDLE_TIMEOUT_ENABLE
+					timeout_reset_timer();  //reset activity timer
+				#endif
+			}
+			break;
+	}
+	return true;
 };
 
 

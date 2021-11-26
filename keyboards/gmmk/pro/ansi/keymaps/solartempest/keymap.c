@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "rgb_matrix_map.h"
 #include "jonavin.h"
 
-
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 //      ESC      F1       F2       F3       F4       F5       F6       F7       F8       F9       F10      F11      F12	     Ins           Rotary(Mute)
@@ -70,7 +69,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
 #ifdef RGB_MATRIX_ENABLE
-    // Capslock, Scroll lock and Numlock  indicator on Left side lights.
+    // Capslock, Scroll lock and Numlock indicator on Left side lights.
     void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 		if (IS_HOST_LED_ON(USB_LED_SCROLL_LOCK)) {
             rgb_matrix_set_color(LED_L7, RGB_GOLD);
@@ -99,7 +98,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         }
         switch(get_highest_layer(layer_state)){  // special handling per layer
         case _FN1:  // on Fn layer select what the encoder does when pressed
-            /*rgb_matrix_set_color(LED_R2, RGB_RED);
+            /*rgb_matrix_set_color(LED_R2, RGB_RED); //Show the active layer as red
             rgb_matrix_set_color(LED_R3, RGB_RED);
             rgb_matrix_set_color(LED_R4, RGB_RED);
             rgb_matrix_set_color(LED_FN, RGB_RED); //FN key*/
@@ -144,9 +143,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 			for (uint8_t i=0; i<ARRAYSIZE(LED_LIST_MODS); i++) {
                 rgb_matrix_set_color(LED_LIST_MODS[i], 138,118,0);
             };
-            /*rgb_matrix_set_color(LED_R4, RGB_MAGENTA);
-            rgb_matrix_set_color(LED_R5, RGB_MAGENTA);
-            rgb_matrix_set_color(LED_R6, RGB_MAGENTA);*/
             break;
         case _RAISE:
 			for (uint8_t i=0; i<ARRAYSIZE(LED_LIST_FUNCROW); i++) {
@@ -167,9 +163,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 			for (uint8_t i=0; i<ARRAYSIZE(LED_SIDE_RIGHT); i++) {
                 rgb_matrix_set_color(LED_SIDE_RIGHT[i], 238,145,0);
             };
-            /*rgb_matrix_set_color(LED_R6, RGB_GREEN);
-            rgb_matrix_set_color(LED_R7, RGB_GREEN);
-            rgb_matrix_set_color(LED_R8, RGB_GREEN);*/
             break;
         default:
             break;
@@ -188,7 +181,5 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 void keyboard_post_init_keymap(void) {
     // keyboard_post_init_user() moved to userspace
-    #ifdef RGB_MATRIX_ENABLE
-        rgb_matrix_set_color_all(RGB_NAUTILUS); // Default startup colour
-    #endif
 }
+

@@ -42,17 +42,16 @@ OPT_DEFS += -DBOOTLOADER_SIZE=4096
 
 
 # Build Options
-#   comment out to disable the options.
+# Comment out to disable the options.
 
-BOOTMAGIC_ENABLE = yes	# Virtual DIP switch configuration(+1000)
-CONSOLE_ENABLE = no  	# Console for debug(+400)
-COMMAND_ENABLE = no     # Commands for debug and configuration
-TERMINAL_ENABLE = no    # Terminal interface feature, very large.
-MOUSEKEY_ENABLE = yes	# Mouse keys(+4700)
-EXTRAKEY_ENABLE = yes	# Audio control and System control(+450)
+BOOTMAGIC_ENABLE = yes	# Virtual DIP switch configuration (+1000)
+CONSOLE_ENABLE = no  	# Console for debug (+400)
+COMMAND_ENABLE = no     # Commands for debug and configuration (+878)
+TERMINAL_ENABLE = no    # Terminal interface feature (+4410)
+MOUSEKEY_ENABLE = yes	# Mouse keys (+4700)
+EXTRAKEY_ENABLE = yes	# Audio control and System control (+450)
 RGBLIGHT_ENABLE = yes	# RGB LEDs
-RGBLIGHT_SLEEP = yes    # LEDs off when sleeping
-NKRO_ENABLE = yes		# USB Nkey Rollover - if this doesn't work, see here: https://github.com/tmk/tmk_keyboard/wiki/FAQ#nkro-doesnt-work
+NKRO_ENABLE = yes		# NKRO (+328)
 KEY_LOCK_ENABLE = no	# Key lock functionality
 ENCODER_ENABLE = yes	# Encoders
 LTO_ENABLE = yes		# Save space

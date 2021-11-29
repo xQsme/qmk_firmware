@@ -285,7 +285,7 @@
 		return OLED_ROTATION_270;
 	}
 	 
-	void oled_task_user(void) {
+	bool oled_task_user(void) {
 		/* KEYBOARD PET VARIABLES START */
 		current_wpm_read = get_current_wpm();
 		led_usb_state = host_keyboard_led_state();
@@ -295,7 +295,7 @@
 		if (is_keyboard_master()) { //Drashna's OLED timeout off code for animations
 			if (timer_elapsed32(oled_timer) > 30000) {
 				oled_off();
-				return;
+				return false;
 			} else {
 				oled_on();
 			}
@@ -306,5 +306,6 @@
 		} else {
 			print_logo_narrow();
 		}
+		return false;
 	}
 #endif

@@ -198,7 +198,7 @@ static void render_anim(void) {
     }
 }
 
-void oled_task_user(void) {
+bool oled_task_user(void) {
 	led_usb_state = host_keyboard_led_state();
     if (is_keyboard_master()) {
         print_status_narrow();
@@ -209,5 +209,6 @@ void oled_task_user(void) {
         sprintf(wpm_str, " %03d\n WPM", get_current_wpm());
         oled_write(wpm_str, false);
     }
+	return false;
 }
 #endif

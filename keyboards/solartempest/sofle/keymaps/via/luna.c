@@ -225,12 +225,9 @@
 		oled_write("TMPST", false);
 	 
 	 	/* wpm counter */
-		char wpm_str[8];
 		oled_set_cursor(0,10);
-		sprintf(wpm_str, " %03d", current_wpm_read);
-		oled_write(wpm_str, false);
-		oled_set_cursor(0,11);
-		oled_write(" wpm", false);
+		oled_write_P(PSTR("WPM: "), false);
+		oled_write(get_u8_str(get_current_wpm(), ' '), false);
 	}
 	 
 	static void print_status_narrow(void) {

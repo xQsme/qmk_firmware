@@ -4,7 +4,7 @@ https://www.reddit.com/r/olkb/comments/lxw6jw/adapted_bongo_cat_animation_to_the
 https://github.com/foureight84/qmk_firmware/tree/sofle_foureight84 */
 
 #ifdef OLED_ENABLE
-char wpm_str[4];
+uint32_t oled_timer = 0; //OLED timeout
 led_t led_usb_state;
 
 static void print_status_narrow(void) {
@@ -201,13 +201,19 @@ static void render_anim(void) {
 bool oled_task_user(void) {
 	led_usb_state = host_keyboard_led_state();
     if (is_keyboard_master()) {
+		if (timer_elapsed32(oled_timer) > 30000) {
+			oled_off();
+			return false;
+		} else {
+			oled_on();
+		}
         print_status_narrow();
     } else {
         oled_set_cursor(0,1);
         render_anim();
         oled_set_cursor(0,13);
-        sprintf(wpm_str, " %03d\n WPM", get_current_wpm());
-        oled_write(wpm_str, false);
+		oled_write_P(PSTR("WPM: "), false);
+		oled_write(get_u8_str(get_current_wpm(), ' '), false);
     }
 	return false;
 }

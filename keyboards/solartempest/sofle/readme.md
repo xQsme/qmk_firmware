@@ -55,6 +55,13 @@ Build guide and log is available here: [SofleKeyboard build log/guide](https://j
 -   Double tap layers to stay on a layer instead of momentary push.
 -   Symmetric modifiers (CMD/Super, Alt/Opt, Ctrl, Shift).
 
+### Acknowledgements
+-   Thanks Drashna for the OLED timeout and extensible rotary encoder code.
+-	Thanks Dasky for helping me resolve prior trackball code issues.
+-	Thanks to Hellsingcoder for creating Luna and Jackasaur for optimizing the code for less space. This was the base code I used for Snakey.
+-	Bongocat code by foureight84, included for those who want to try it easily.
+-	Stock OLED code by Keyhive and 
+
 ## Using with VIA (Important! Please Read.)
 
 -   After flashing, in VIA make sure to Import Keymap, which is "sofle VIA keymap.json". This will alow VIA to recognize the updated layout and custom functions. VIA will not auto-recognize the keyboard with this firmware because of the necessary customization.

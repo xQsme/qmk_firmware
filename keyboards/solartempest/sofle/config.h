@@ -28,7 +28,7 @@
 #define DESCRIPTION     Rose version of the Sofle
 
 // Set which side is master
-#define MASTER_LEFT
+#define MASTER_RIGHT
 //#define EE_HANDS //Use this if EEPROM setting is desired instead
 
 // Key Matrix Settings

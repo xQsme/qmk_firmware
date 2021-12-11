@@ -44,7 +44,7 @@
 	bool showedJump = true;
 	bool isBarking = false;
 	
-	#if defined(OLED_LOGO) && !defined(OLED_NO_SLAVE)
+	#if defined(OLED_LOGO) && !defined(OLED_NO_SLAVE) && !defined(OLED_NO_MASTER)
 		static void render_logo(int LUNA_X, int LUNA_Y) {
 			static const char PROGMEM luna_logo[] = {
 				0x00, 0x00, 0x04, 0xf6, 0xb8, 0xf8, 0xd8, 0xf0, 0xe0, 0xc0, 0x00, 0x00, 0x00, 0x80, 0xc0, 0xe0, 
@@ -174,7 +174,7 @@
 	// KEYBOARD PET END
 	
 
-	#ifndef OLED_NO_SLAVE
+	#if !defined(OLED_NO_SLAVE) && !defined(OLED_NO_MASTER)
 		static void print_logo_narrow(void) {
 			oled_set_cursor(0,4);
 			oled_write("SOLAR", false);
@@ -239,10 +239,17 @@
 			} else {
 				oled_on();
 			}
-			print_status_narrow();
+			#ifndef OLED_NO_MASTER
+				print_status_narrow();
+			#endif
 		} else {
-			#ifndef OLED_NO_SLAVE
-				print_logo_narrow();
+			#ifdef OLED_NO_SLAVE	//do not render slave
+			#else
+				#if !defined(OLED_NO_MASTER)	//render as normal
+					print_logo_narrow();
+				#else	//render status on slave
+					print_status_narrow();
+				#endif
 			#endif
 		}
 		return false;

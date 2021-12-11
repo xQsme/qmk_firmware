@@ -86,12 +86,15 @@
 	#ifdef WPM_ENABLE
 		#define SPLIT_WPM_ENABLE			//Enable WPM across split keyboards (+106-268).
 	#endif
-	//#define SPLIT_LAYER_STATE_ENABLE	//Keep on master to save space (+142).
-	//#define SPLIT_LED_STATE_ENABLE	//Keep on master to save space (+112).
-	//#define SPLIT_MODS_ENABLE			//Keep on master to save space (+138).
 	#define OLED_LOGO					//Enable to print snakey custom logo on slave side (+108).
-	//#define OLED_NO_SLAVE				//Disable snakey keyboard pet slave OLED rendering (-160).
 	//#define SNEAK_DISABLE				//Disable snakey keyboard pet sneak animation to save space (-132).
+	//#define OLED_NO_SLAVE				//Disable snakey minimal keyboard pet slave OLED rendering (-160).
+	//#define OLED_NO_MASTER				//Disable snakey minimal keyboard pet master OLED rendering and render status on the slave (+96).
+	#ifdef OLED_NO_MASTER
+		#define SPLIT_LAYER_STATE_ENABLE	//Keep on master to save space (+142).
+		#define SPLIT_LED_STATE_ENABLE		//Keep on master to save space (+112).
+	#endif
+	//#define SPLIT_MODS_ENABLE			//Keep on master to save space (+138).
 #endif
 
 // Haptic feedback settings

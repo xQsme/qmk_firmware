@@ -174,7 +174,7 @@
 	// KEYBOARD PET END
 	
 
-	#if !defined(OLED_NO_SLAVE) || !defined(OLED_NO_MASTER)
+	#if !defined(OLED_NO_SLAVE) && !defined(OLED_NO_MASTER)
 		static void print_logo_narrow(void) {
 			oled_set_cursor(0,4);
 			oled_write("SOLAR", false);
@@ -243,11 +243,13 @@
 				print_status_narrow();
 			#endif
 		} else {
-			#if defined(OLED_NO_MASTER)	//render status on slave
-				print_status_narrow();
-			#elseif !defined(OLED_NO_SLAVE) && !defined(OLED_NO_SLAVE)	//render as normal
-				print_logo_narrow();
-			#else	//do not render slave
+			#ifdef OLED_NO_SLAVE	//do not render slave
+			#else
+				#if !defined(OLED_NO_MASTER)	//render as normal
+					print_logo_narrow();
+				#else	//render status on slave
+					print_status_narrow();
+				#endif
 			#endif
 		}
 		return false;

@@ -93,6 +93,7 @@
 	#ifdef OLED_NO_MASTER
 		#define SPLIT_LAYER_STATE_ENABLE	//Keep on master to save space (+142).
 		#define SPLIT_LED_STATE_ENABLE		//Keep on master to save space (+112).
+		#undef SPLIT_OLED_ENABLE			//Do not sync OLED state with one OLED only (+100).
 	#endif
 	//#define SPLIT_MODS_ENABLE			//Keep on master to save space (+138).
 #endif

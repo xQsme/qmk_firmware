@@ -58,6 +58,8 @@
 	#define COMBO_TERM 400 //Default combo time is 200ms. This is the time delay allowed between deleting each whole word with shift-backspace.
 #endif
 
+#define D2SKATE_MACRO_ENABLE	//Enable Destiny 2 hunter skate macro (+224)
+
 // Disabled to save space
 #define NO_ACTION_MACRO
 #define NO_ACTION_FUNCTION

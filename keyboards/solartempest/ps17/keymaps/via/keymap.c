@@ -325,8 +325,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 					rgblight_sethsv_at(15,255,120,22);
 					}
 				else {
-					rgblight_sethsv_at(175,255,120,18); //Set LEDs back to violet, assuming on that coloured layer
-					rgblight_sethsv_at(175,255,120,22);
+					//rgblight_sethsv_at(175,255,120,18); //Set LEDs back to violet, assuming on that coloured layer
+					//rgblight_sethsv_at(175,255,120,22);
+					rgblight_sethsv_at(207,255,120,18); //Set LEDs back to magenta, assuming on that coloured layer
+					rgblight_sethsv_at(207,255,120,22);
 					}
 			#endif
 		  }
@@ -408,13 +410,15 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 		
 	switch (get_highest_layer(state)) { // Change all other LEDs based on layer state as well
 		case 0:
-			rgblight_sethsv_noeeprom(50,255,100);
+			//rgblight_sethsv_noeeprom(50,255,100);	//blue-green gradient
+			rgblight_sethsv_noeeprom(115,200,100);	//pale-blue gradient
 			//You can selectively decrease certain LEDs if you are have a clear acrylic case and the shine-through is bothersome. Rgblight_sethsv_at() can be used here for those LEDs (0, 2, 4, 14, and 23). Otherwise some black tape on the acrylic plate or foam underneath the FR4 plate will do the trick.
 			break;
 		case 1:
 			rgblight_sethsv_noeeprom(5,255,100);
 		case 2:
-			rgblight_sethsv_noeeprom(128,255,100);
+			//rgblight_sethsv_noeeprom(128,255,100);//blue-purple gradient
+			rgblight_sethsv_noeeprom(160,255,100);	//blue-magenta gradient
 			break;
 		case 3:
 			rgblight_sethsv_noeeprom(215,255,100);

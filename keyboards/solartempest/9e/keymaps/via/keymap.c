@@ -394,9 +394,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 
 // RGB Layer Light Settings - Note that this will fix the key switches with same LED colour and brightness
-const rgblight_segment_t PROGMEM my_layer0_layer[] = RGBLIGHT_LAYER_SEGMENTS({4, 18, 95,255,90}); //Spring green
+//const rgblight_segment_t PROGMEM my_layer0_layer[] = RGBLIGHT_LAYER_SEGMENTS({4, 18, 95,255,90}); //Spring green
+const rgblight_segment_t PROGMEM my_layer0_layer[] = RGBLIGHT_LAYER_SEGMENTS({4, 18, 128,255,100}); //Cyan
 const rgblight_segment_t PROGMEM my_layer1_layer[] = RGBLIGHT_LAYER_SEGMENTS({4, 18, 30,255,120}); //Yellow-orange
-const rgblight_segment_t PROGMEM my_layer2_layer[] = RGBLIGHT_LAYER_SEGMENTS({4, 18, 128,255,100}); //Cyan
+//const rgblight_segment_t PROGMEM my_layer2_layer[] = RGBLIGHT_LAYER_SEGMENTS({4, 18, 128,255,100}); //Cyan
+const rgblight_segment_t PROGMEM my_layer2_layer[] = RGBLIGHT_LAYER_SEGMENTS({4, 18, 95,255,90}); //Spring green
 const rgblight_segment_t PROGMEM my_layer3_layer[] = RGBLIGHT_LAYER_SEGMENTS({4, 18, 215,255,120}); //Magenta
 const rgblight_segment_t PROGMEM my_capslock_layer[] = RGBLIGHT_LAYER_SEGMENTS({4, 2, 43,100,160}); //White-left caps lock indication (No dedicated LED)
 const rgblight_segment_t PROGMEM my_numlock_layer[] = RGBLIGHT_LAYER_SEGMENTS({8, 2, 43,100,150}); //White-right num lock indication (No dedicated LED)
@@ -430,13 +432,15 @@ layer_state_t layer_state_set_user(layer_state_t state)
 	
 	switch(biton32(state)){ // Change all other LEDs based on layer state as well
 		case 0:
-			rgblight_sethsv_noeeprom(50,255,30);
+			//rgblight_sethsv_noeeprom(50,255,30);	//blue-green gradient
+			rgblight_sethsv_noeeprom(106,200,30);	//blue gradient
 			break;
 		case 1:
 			rgblight_sethsv_noeeprom(30,255,30);
 			break;
 		case 2:
-			rgblight_sethsv_noeeprom(106,255,30);
+			//rgblight_sethsv_noeeprom(106,255,30);	//blue gradient
+			rgblight_sethsv_noeeprom(50,255,30);	//blue-green gradient
 			break;
 		case 3:
 			rgblight_sethsv_noeeprom(215,255,30);

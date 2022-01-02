@@ -441,7 +441,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	{
 		switch (get_highest_layer(state)) { // Change all other LEDs based on layer state as well
 			case 0:
-				rgblight_sethsv_noeeprom(50,255,80);
+				//rgblight_sethsv_noeeprom(50,255,80);	//green-blue gradient
+				rgblight_sethsv_noeeprom(115,170,80);	//pale blue gradient
 				#ifdef POINTING_DEVICE_ENABLE
 					if (was_scrolling==true){ //Check if was scrolling when layer was left
 						trackball_is_scrolling=true;
@@ -465,7 +466,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 				#endif
 				break;
 			case 3:
-				rgblight_sethsv_noeeprom(118,255,80);
+				//rgblight_sethsv_noeeprom(118,255,80);	//blue-purple gradient
+				rgblight_sethsv_noeeprom(160,255,80);	//blue-magenta gradient
 				#ifdef HAPTIC_ENABLE
 					DRV_pulse(31);		//sh_dblclick_med
 				#endif

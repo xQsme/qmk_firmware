@@ -27,5 +27,5 @@ WPM_ENABLE = no					# WPM counter for typing-speed-reactive keyboard pets (+782)
 POINTING_DEVICE_ENABLE = yes	# Enable Pimoroni Trackball on master (+2304)
 POINTING_DEVICE_DRIVER = pimoroni_trackball
 
-HAPTIC_ENABLE = yes				# Enable Pimoroni Haptic Bzzz LRA (+1192)
+HAPTIC_ENABLE = no				# Enable Pimoroni Haptic Bzzz LRA (+1192)
 HAPTIC_DRIVER += DRV2605L

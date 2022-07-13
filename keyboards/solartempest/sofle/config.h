@@ -75,7 +75,8 @@
 #define ENCODERS_PAD_B { F4 }
 #define ENCODERS_PAD_A_RIGHT { F4 }
 #define ENCODERS_PAD_B_RIGHT { F5 }
-#define ENCODER_RESOLUTIONS { 4, 2 } //Left encoder seems to have double-output issue but right does not. This resolves that issue.
+#define ENCODER_RESOLUTIONS { 4 } //Left encoder seems to have double-output issue but right does not. This resolves that issue.
+#define ENCODER_RESOLUTIONS_RIGHT { 2 }  // Left encoder seems to have double-output issue but right does not.
 
 // Communication between sides
 #define SOFT_SERIAL_PIN D2

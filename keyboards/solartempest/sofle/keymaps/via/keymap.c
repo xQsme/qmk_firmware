@@ -26,20 +26,20 @@
 	//#include "oled.c" //Stock OLED code
 	//Note that the keyboard animations below take a large amount of space!
 		//#include "bongocat.c" //OLED code for Bongocat, original code by foureight84.
-		//#include "luna.c" //OLED code for Luna, original code by Hellsingcoder and adapted by Jackasaur.
+		#include "luna.c" //OLED code for Luna, original code by Hellsingcoder and adapted by Jackasaur.
 		//#include "snakey.c" //OLED code for Snakey, customized from Luna. If not used, do not use OLED_LOGO in config.h.
-		#include "snakey_minimal.c" //OLED code for Snakey, without WPM/related animations to save space. If not used, do not use OLED_LOGO in config.h.
+		//#include "snakey_minimal.c" //OLED code for Snakey, without WPM/related animations to save space. If not used, do not use OLED_LOGO in config.h.
 #endif
 
-#ifdef POINTING_DEVICE_ENABLE
-	bool trackball_is_scrolling = true;		//Default mode is scrolling
-	bool trackball_is_precision = false;	//Default mode is less precise
-	bool was_scrolling = true;	//Remember preferred state of trackball scrolling
-#endif
+// #ifdef POINTING_DEVICE_ENABLE
+// 	bool trackball_is_scrolling = true;		//Default mode is scrolling
+// 	bool trackball_is_precision = false;	//Default mode is less precise
+// 	bool was_scrolling = true;	//Remember preferred state of trackball scrolling
+// #endif
 
-#ifdef HAPTIC_ENABLE
-	#include "drivers/haptic/DRV2605L.h"
-#endif
+// #ifdef HAPTIC_ENABLE
+// 	#include "drivers/haptic/DRV2605L.h"
+// #endif
 
 #if defined(RGBLIGHT_ENABLE) && defined(RGBLIGHT_LAYERS)
 	extern rgblight_config_t rgblight_config; // To pull layer status for RGBLIGHT
@@ -55,11 +55,11 @@ bool lshift_held = false;	// LShift Backspace Delete whole Word Code
 bool rshift_held = false;	// RShift Backspace Delete whole Word Code
 static uint16_t held_shift = 0;
 
-#ifdef D2SKATE_MACRO_ENABLE
-	uint16_t D2SKATE_TIMER = 0;
-	bool D2SKATE_skated = false;	//Has skated
-	bool D2SKATE_reset = true;	//Has skated
-#endif
+// #ifdef D2SKATE_MACRO_ENABLE
+// 	uint16_t D2SKATE_TIMER = 0;
+// 	bool D2SKATE_skated = false;	//Has skated
+// 	bool D2SKATE_reset = true;	//Has skated
+// #endif
 
 #ifdef VIA_ENABLE
 	enum custom_keycodes { //Use USER 00 instead of SAFE_RANGE for Via. VIA json must include the custom keycode.
@@ -68,9 +68,9 @@ static uint16_t held_shift = 0;
 	  NMR, 				//Move window to monitor on right
 	  NML, 				//Move window to monitor on left
 	  SBS, 				//Shift backspace to delete whole word (Swap KC_BPSC with this)
-      PM_SCROLL,		//Toggle trackball scrolling mode
-      PM_PRECISION,		//Toggle trackball precision mode
-	  D2SKATE			//Destiny 2 hunter sword skate
+    //   PM_SCROLL,		//Toggle trackball scrolling mode
+    //   PM_PRECISION,		//Toggle trackball precision mode
+	//   D2SKATE			//Destiny 2 hunter sword skate
 	};
 #else
 	enum custom_keycodes { //Use USER 00 instead of SAFE_RANGE for Via. VIA json must include the custom keycode.
@@ -79,9 +79,9 @@ static uint16_t held_shift = 0;
 	  NMR, 				//Move window to monitor on right
 	  NML, 				//Move window to monitor on left
 	  SBS,				//Shift backspace to delete whole word (Swap KC_BPSC with this)
-      PM_SCROLL,		//Toggle trackball scrolling mode
-      PM_PRECISION,		//Toggle trackball precision mode
-	  D2SKATE			//Destiny 2 hunter sword skate
+    //   PM_SCROLL,		//Toggle trackball scrolling mode
+    //   PM_PRECISION,		//Toggle trackball precision mode
+	//   D2SKATE			//Destiny 2 hunter sword skate
 	};
 #endif
 
@@ -139,58 +139,58 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {  //Can skip these
 };
 
 
-#ifdef POINTING_DEVICE_ENABLE
-	void run_trackball_cleanup(void) {	//Set colour of trackball LED. Does not require RGBLIGHT_ENABLE if colour shorthands are not used.
-		#ifdef POINTING_DEVICE_ENABLE
-		if (trackball_is_scrolling) {
-			pimoroni_trackball_set_rgbw(43, 153, 103, 0x00);
-		} else if (!trackball_is_precision) {
-			pimoroni_trackball_set_rgbw(0, 27, 199, 0x00);
-		} else {
-			pimoroni_trackball_set_rgbw(217, 165, 33, 0x00);	//RGB_GOLDENROD in number form. 
-		}
-		#endif
-	}
-	
-	uint8_t pointing_device_handle_buttons(uint8_t buttons, bool pressed, pointing_device_buttons_t button) {
-		if (pressed) {
-			buttons |= 1 << (button);
-			#ifdef HAPTIC_ENABLE	//Haptic feedback when trackball button is pressed
-				DRV_pulse(4);		//sharp_click
-			#endif
-		} else {
-			buttons &= ~(1 << (button));
-		}
-		return buttons;
-	}
+// #ifdef POINTING_DEVICE_ENABLE
+// 	void run_trackball_cleanup(void) {	//Set colour of trackball LED. Does not require RGBLIGHT_ENABLE if colour shorthands are not used.
+// 		#ifdef POINTING_DEVICE_ENABLE
+// 		if (trackball_is_scrolling) {
+// 			pimoroni_trackball_set_rgbw(43, 153, 103, 0x00);
+// 		} else if (!trackball_is_precision) {
+// 			pimoroni_trackball_set_rgbw(0, 27, 199, 0x00);
+// 		} else {
+// 			pimoroni_trackball_set_rgbw(217, 165, 33, 0x00);	//RGB_GOLDENROD in number form.
+// 		}
+// 		#endif
+// 	}
 
-	report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
-		if (trackball_is_scrolling) {
-			mouse_report.h = mouse_report.x;
-			#ifndef PIMORONI_TRACKBALL_INVERT_X
-				mouse_report.v = 0.3*mouse_report.y;	//Multiplier to lower scrolling sensitivity
-			#else
-				mouse_report.v = 0.3*-mouse_report.y;	//invert vertical scroll direction
-			#endif
-			mouse_report.x = mouse_report.y = 0;
-		}
-		return mouse_report;
-	}
+// 	uint8_t pointing_device_handle_buttons(uint8_t buttons, bool pressed, pointing_device_buttons_t button) {
+// 		if (pressed) {
+// 			buttons |= 1 << (button);
+// 			#ifdef HAPTIC_ENABLE	//Haptic feedback when trackball button is pressed
+// 				DRV_pulse(4);		//sharp_click
+// 			#endif
+// 		} else {
+// 			buttons &= ~(1 << (button));
+// 		}
+// 		return buttons;
+// 	}
 
-	#if !defined(MOUSEKEY_ENABLE)	//Allows for button clicks on keymap even though mousekeys is not defined.
-		static bool mouse_button_one, trackball_button_one;
-	#endif
+// 	report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
+// 		if (trackball_is_scrolling) {
+// 			mouse_report.h = mouse_report.x;
+// 			#ifndef PIMORONI_TRACKBALL_INVERT_X
+// 				mouse_report.v = 0.3*mouse_report.y;	//Multiplier to lower scrolling sensitivity
+// 			#else
+// 				mouse_report.v = 0.3*-mouse_report.y;	//invert vertical scroll direction
+// 			#endif
+// 			mouse_report.x = mouse_report.y = 0;
+// 		}
+// 		return mouse_report;
+// 	}
 
-	void trackball_register_button(bool pressed, enum mouse_buttons button) {
-		report_mouse_t currentReport = pointing_device_get_report();
-		if (pressed) {
-			currentReport.buttons |= button;
-		} else {
-			currentReport.buttons &= ~button;
-		}
-		pointing_device_set_report(currentReport);
-	}
-#endif
+// 	#if !defined(MOUSEKEY_ENABLE)	//Allows for button clicks on keymap even though mousekeys is not defined.
+// 		static bool mouse_button_one, trackball_button_one;
+// 	#endif
+
+// 	void trackball_register_button(bool pressed, enum mouse_buttons button) {
+// 		report_mouse_t currentReport = pointing_device_get_report();
+// 		if (pressed) {
+// 			currentReport.buttons |= button;
+// 		} else {
+// 			currentReport.buttons &= ~button;
+// 		}
+// 		pointing_device_set_report(currentReport);
+// 	}
+// #endif
 
 
 void matrix_scan_user(void) {
@@ -202,23 +202,23 @@ void matrix_scan_user(void) {
 			}
 		}
 	#endif
-	#ifdef D2SKATE_MACRO_ENABLE
-		if (D2SKATE_reset == false) {	//Check if Destiny 2 skate timer is activated
-			if (timer_elapsed(D2SKATE_TIMER) > 4000) {
-				rgblight_sethsv_noeeprom(252,255,80); //Set regular game layer colour
-				D2SKATE_reset = true;
-				#ifdef HAPTIC_ENABLE
-					DRV_pulse(12);		//trp_click
-				#endif
-			}
-		}
-	#endif
+	// #ifdef D2SKATE_MACRO_ENABLE
+	// 	if (D2SKATE_reset == false) {	//Check if Destiny 2 skate timer is activated
+	// 		if (timer_elapsed(D2SKATE_TIMER) > 4000) {
+	// 			rgblight_sethsv_noeeprom(252,255,80); //Set regular game layer colour
+	// 			D2SKATE_reset = true;
+	// 			#ifdef HAPTIC_ENABLE
+	// 				DRV_pulse(12);		//trp_click
+	// 			#endif
+	// 		}
+	// 	}
+	// #endif
 	#ifdef ENCODER_ENABLE
 		encoder_action_unregister();
 	#endif
-	if (timer_elapsed32(oled_timer) > 60000) { //60000ms = 60s
-		pimoroni_trackball_set_rgbw(0,0,0, 0x00); //Turn off Pimoroni trackball LED when computer is idle for 1 minute. Would use suspend_power_down_user but the code is not working.
-	}
+	// if (timer_elapsed32(oled_timer) > 60000) { //60000ms = 60s
+	// 	pimoroni_trackball_set_rgbw(0,0,0, 0x00); //Turn off Pimoroni trackball LED when computer is idle for 1 minute. Would use suspend_power_down_user but the code is not working.
+	// }
 }
 
 
@@ -228,7 +228,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 			oled_timer = timer_read32();
 		}
 	#endif
-	
+
 	switch (keycode) { //For keycode overrides
 		#ifdef SUPER_ALT_TAB_ENABLE
 		case ATABF:	//Alt tab forwards
@@ -258,7 +258,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 				}
 			return true;
 		#endif
-		  
+
 		case NMR:	//Move window to next monitor on right
 		  if (record->event.pressed) {
 			register_code(KC_LSFT);
@@ -324,73 +324,73 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 				}
 			}
 			return false;
-		#ifdef D2SKATE_MACRO_ENABLE
-			case D2SKATE:
-					if (record->event.pressed) {
-						register_code(KC_0);
-						wait_ms(34);
-						register_code(KC_SPC);
-						unregister_code(KC_0);
-						register_code(KC_X);
-						wait_ms(18);
-						unregister_code(KC_SPC);
-						unregister_code(KC_X);
-						rgblight_sethsv_noeeprom(180,255,80);
-						D2SKATE_skated = true;
-					}
-				return false;
-			case KC_1:
-			case KC_2:
-			case KC_3:
-				if (record->event.pressed) {
-					if(D2SKATE_skated){	//Start the cooldown timer
-						D2SKATE_TIMER = timer_read();
-						D2SKATE_skated = false;
-						D2SKATE_reset = false;
-					}
-				}
-				return true;
-		#endif
-			
-		#ifdef POINTING_DEVICE_ENABLE //Allow modes when trackball is enabled.
-				case PM_SCROLL:
-					if (record->event.pressed) {
-						if (trackball_is_scrolling || was_scrolling){ //Enable toggling for trackball scrolling
-							trackball_is_scrolling=false;
-							was_scrolling=false; //Tracks status of scrolling setting. Works with holding of layer key for mouse mode.
-						} else{
-							trackball_is_scrolling=true;
-							was_scrolling=true;
-						}
-						run_trackball_cleanup();
-						break;
-					}
-				case PM_PRECISION:
-					if (record->event.pressed) {
-						if (trackball_is_precision){ //Enable toggling for trackball precision
-							pimoroni_trackball_set_cpi(1.75);
-							trackball_is_precision=false;
-						} else{
-							pimoroni_trackball_set_cpi(0.8);
-							trackball_is_precision=true;
-						}
-						run_trackball_cleanup();
-						break;
-					}
-			#ifndef MOUSEKEY_ENABLE //Allow for using mouse buttons in the keymap when mouse keys is not enabled.
-					case KC_MS_BTN1:
-						mouse_button_one = record->event.pressed;
-						trackball_register_button(mouse_button_one | trackball_button_one, MOUSE_BTN1);
-						break;
-					case KC_MS_BTN2:
-						trackball_register_button(record->event.pressed, MOUSE_BTN2);
-						break;
-					case KC_MS_BTN3:
-						trackball_register_button(record->event.pressed, MOUSE_BTN3);
-						break;
-			#endif
-		#endif
-		
+		// #ifdef D2SKATE_MACRO_ENABLE
+		// 	case D2SKATE:
+		// 			if (record->event.pressed) {
+		// 				register_code(KC_0);
+		// 				wait_ms(34);
+		// 				register_code(KC_SPC);
+		// 				unregister_code(KC_0);
+		// 				register_code(KC_X);
+		// 				wait_ms(18);
+		// 				unregister_code(KC_SPC);
+		// 				unregister_code(KC_X);
+		// 				rgblight_sethsv_noeeprom(180,255,80);
+		// 				D2SKATE_skated = true;
+		// 			}
+		// 		return false;
+		// 	case KC_1:
+		// 	case KC_2:
+		// 	case KC_3:
+		// 		if (record->event.pressed) {
+		// 			if(D2SKATE_skated){	//Start the cooldown timer
+		// 				D2SKATE_TIMER = timer_read();
+		// 				D2SKATE_skated = false;
+		// 				D2SKATE_reset = false;
+		// 			}
+		// 		}
+		// 		return true;
+		// #endif
+
+		// #ifdef POINTING_DEVICE_ENABLE //Allow modes when trackball is enabled.
+		// 		case PM_SCROLL:
+		// 			if (record->event.pressed) {
+		// 				if (trackball_is_scrolling || was_scrolling){ //Enable toggling for trackball scrolling
+		// 					trackball_is_scrolling=false;
+		// 					was_scrolling=false; //Tracks status of scrolling setting. Works with holding of layer key for mouse mode.
+		// 				} else{
+		// 					trackball_is_scrolling=true;
+		// 					was_scrolling=true;
+		// 				}
+		// 				run_trackball_cleanup();
+		// 				break;
+		// 			}
+		// 		case PM_PRECISION:
+		// 			if (record->event.pressed) {
+		// 				if (trackball_is_precision){ //Enable toggling for trackball precision
+		// 					pimoroni_trackball_set_cpi(1.75);
+		// 					trackball_is_precision=false;
+		// 				} else{
+		// 					pimoroni_trackball_set_cpi(0.8);
+		// 					trackball_is_precision=true;
+		// 				}
+		// 				run_trackball_cleanup();
+		// 				break;
+		// 			}
+		// 	#ifndef MOUSEKEY_ENABLE //Allow for using mouse buttons in the keymap when mouse keys is not enabled.
+		// 			case KC_MS_BTN1:
+		// 				mouse_button_one = record->event.pressed;
+		// 				trackball_register_button(mouse_button_one | trackball_button_one, MOUSE_BTN1);
+		// 				break;
+		// 			case KC_MS_BTN2:
+		// 				trackball_register_button(record->event.pressed, MOUSE_BTN2);
+		// 				break;
+		// 			case KC_MS_BTN3:
+		// 				trackball_register_button(record->event.pressed, MOUSE_BTN3);
+		// 				break;
+		// 	#endif
+		// #endif
+
 		#ifdef KEYBOARD_PET // KEYBOARD PET STATUS
 			case KC_LCTL:
 			case KC_RCTL:
@@ -401,11 +401,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 					isSneaking = false;
 				}
 				#endif
-				#ifdef HAPTIC_ENABLE	//Set different patterns for keys on certain layers. In this case it is for gaming feedback.
-					if (record->event.pressed && (get_highest_layer(layer_state)==1)) {
-						DRV_pulse(51);		//buzz_20
-					}
-				#endif
+				// #ifdef HAPTIC_ENABLE	//Set different patterns for keys on certain layers. In this case it is for gaming feedback.
+				// 	if (record->event.pressed && (get_highest_layer(layer_state)==1)) {
+				// 		DRV_pulse(51);		//buzz_20
+				// 	}
+				// #endif
 				return true;
 			case KC_SPC:
 				if (record->event.pressed) { //Pet jumps when enter is pressed.
@@ -416,21 +416,21 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 				}
 				return true;
 		#endif
-		
-		#ifdef HAPTIC_ENABLE	//Set different patterns for keys on certain layers. In this case it is for gaming feedback.
-			case KC_G:
-				if (record->event.pressed && (get_highest_layer(layer_state)==1)) {
-					DRV_pulse(50);		//buzz_40
-				}
-			case KC_R:
-				if (record->event.pressed && (get_highest_layer(layer_state)==1)) {
-					DRV_pulse(52);		//pulsing_strong
-				}
-			case KC_F:
-				if (record->event.pressed && (get_highest_layer(layer_state)==1)) {
-					DRV_pulse(49);		//buzz_60
-				}
-		#endif
+
+		// #ifdef HAPTIC_ENABLE	//Set different patterns for keys on certain layers. In this case it is for gaming feedback.
+		// 	case KC_G:
+		// 		if (record->event.pressed && (get_highest_layer(layer_state)==1)) {
+		// 			DRV_pulse(50);		//buzz_40
+		// 		}
+		// 	case KC_R:
+		// 		if (record->event.pressed && (get_highest_layer(layer_state)==1)) {
+		// 			DRV_pulse(52);		//pulsing_strong
+		// 		}
+		// 	case KC_F:
+		// 		if (record->event.pressed && (get_highest_layer(layer_state)==1)) {
+		// 			DRV_pulse(49);		//buzz_60
+		// 		}
+		// #endif
 		}
 	return true;
 }
@@ -443,50 +443,50 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 			case 0:
 				//rgblight_sethsv_noeeprom(50,255,80);	//green-blue gradient
 				rgblight_sethsv_noeeprom(115,170,80);	//pale blue gradient
-				#ifdef POINTING_DEVICE_ENABLE
-					if (was_scrolling==true){ //Check if was scrolling when layer was left
-						trackball_is_scrolling=true;
-						run_trackball_cleanup();
-					} else{
-						trackball_is_scrolling=false;
-						run_trackball_cleanup();
-					}
-				#endif
+				// #ifdef POINTING_DEVICE_ENABLE
+				// 	if (was_scrolling==true){ //Check if was scrolling when layer was left
+				// 		trackball_is_scrolling=true;
+				// 		run_trackball_cleanup();
+				// 	} else{
+				// 		trackball_is_scrolling=false;
+				// 		run_trackball_cleanup();
+				// 	}
+				// #endif
 				break;
 			case 1:
 				rgblight_sethsv_noeeprom(252,255,80);
-				#ifdef HAPTIC_ENABLE	//Set different patterns for haptic feedback layer indication
-					DRV_pulse(69);		//transition_hum_10
-				#endif
+				// #ifdef HAPTIC_ENABLE	//Set different patterns for haptic feedback layer indication
+				// 	DRV_pulse(69);		//transition_hum_10
+				// #endif
 				break;
 			case 2:
 				rgblight_sethsv_noeeprom(80,255,80);
-				#ifdef HAPTIC_ENABLE
-					DRV_pulse(37);		//lg_dblclick_str
-				#endif
+				// #ifdef HAPTIC_ENABLE
+				// 	DRV_pulse(37);		//lg_dblclick_str
+				// #endif
 				break;
 			case 3:
 				//rgblight_sethsv_noeeprom(118,255,80);	//blue-purple gradient
 				rgblight_sethsv_noeeprom(160,255,80);	//blue-magenta gradient
-				#ifdef HAPTIC_ENABLE
-					DRV_pulse(31);		//sh_dblclick_med
-				#endif
+				// #ifdef HAPTIC_ENABLE
+				// 	DRV_pulse(31);		//sh_dblclick_med
+				// #endif
 				break;
 			case 4:
 				rgblight_sethsv_noeeprom(218,255,80);
-				#ifdef HAPTIC_ENABLE
-					DRV_pulse(7);		//soft_bump
-				#endif
-				#ifdef POINTING_DEVICE_ENABLE	//Set trackball mouse mode when layer 4 is activated
-					if (was_scrolling==true){	//Check if in scrolling mode when layer was activated
-						trackball_is_scrolling=false;
-						run_trackball_cleanup();
-					}
-				#endif
+				// #ifdef HAPTIC_ENABLE
+				// 	DRV_pulse(7);		//soft_bump
+				// #endif
+				// #ifdef POINTING_DEVICE_ENABLE	//Set trackball mouse mode when layer 4 is activated
+				// 	if (was_scrolling==true){	//Check if in scrolling mode when layer was activated
+				// 		trackball_is_scrolling=false;
+				// 		run_trackball_cleanup();
+				// 	}
+				// #endif
 		  }
 		return state;
 	}
-	
+
 	bool led_update_user(led_t led_state)	//Lock key status indicators
 	{
 		if(led_state.caps_lock){
@@ -506,23 +506,23 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 void keyboard_post_init_user(void)
 {
 	#ifdef RGBLIGHT_ENABLE
-		rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_GRADIENT+8); //Set to static gradient 9
+		rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_GRADIENT); //Set to static gradient 9
 	#endif
 	layer_move(0); 						//Start on layer0 by default to set LED colours. Can remove to save a very small amount of space.
-	#ifdef POINTING_DEVICE_ENABLE
-		pimoroni_trackball_set_cpi(1.75);	//Start trackball with lower precision mode
-		run_trackball_cleanup();
-	#endif
+	// #ifdef POINTING_DEVICE_ENABLE
+	// 	pimoroni_trackball_set_cpi(1.75);	//Start trackball with lower precision mode
+	// 	run_trackball_cleanup();
+	// #endif
 }
 
-#ifdef POINTING_DEVICE_ENABLE
-	void suspend_power_down_user(void) {	//Code does not work, need to confirm why
-			pimoroni_trackball_set_rgbw(0,0,0, 0x00); //Turn off Pimoroni trackball LED when computer is sleeping
-	}
-#endif
+// #ifdef POINTING_DEVICE_ENABLE
+// 	void suspend_power_down_user(void) {	//Code does not work, need to confirm why
+// 			pimoroni_trackball_set_rgbw(0,0,0, 0x00); //Turn off Pimoroni trackball LED when computer is sleeping
+// 	}
+// #endif
 
-#ifdef POINTING_DEVICE_ENABLE
-	void suspend_wakeup_init_user(void) { //turn on Pimoroni LED when awoken
-		run_trackball_cleanup();
-	}
-#endif
+// #ifdef POINTING_DEVICE_ENABLE
+// 	void suspend_wakeup_init_user(void) { //turn on Pimoroni LED when awoken
+// 		run_trackball_cleanup();
+// 	}
+// #endif
